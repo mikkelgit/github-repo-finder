@@ -4,12 +4,14 @@ import illustration from './assets/illustration.svg'
 export default function App() {
     const [repositoryData, setRepositoryData] = useState([])
     const [inputData, setInputData] = useState('')
+    const [showIllustration, setShowIllustration] = useState(true)
 
     const findRepos = async (e) => {
         e.preventDefault()
         if (inputData.length) {
             const response = await (await fetch('https://api.github.com/users/' + inputData + '/repos')).json()
-            console.log(response)
+            setShowIllustration(false)
+            setRepositoryData(response)
         }
     }
 
@@ -27,9 +29,23 @@ export default function App() {
                         </button>
                     </div>
                 </form>
-                <div className="pt-16">
-                    <img className="block md:max-w-screen-sm opacity-50 mx-auto" src={illustration} alt="" />
-                </div>
+                {
+                    showIllustration ? (
+                        <div className="pt-16">
+                            <img className="block md:max-w-screen-sm opacity-50 mx-auto" src={illustration} alt="" />
+                        </div>
+                    ) : (
+                        <div className="pt-16">
+                            {
+                                repositoryData.message ? <p className="text-center text-lg font-bold">{repositoryData.message}</p> : (
+                                    repositoryData.length ? (
+                                        <p>{JSON.stringify(repositoryData)}</p>
+                                    ) : <p className="text-center text-lg font-bold ">This user doesnt have any public repository :(</p>
+                                )
+                            }
+                        </div>
+                    )
+                }
             </div>
         </div>
     )
