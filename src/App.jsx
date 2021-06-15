@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import illustration from './assets/illustration.svg'
+import RepositoryCard from './components/RepositoryCard'
 
 export default function App() {
     const [repositoryData, setRepositoryData] = useState([])
@@ -8,10 +9,12 @@ export default function App() {
 
     const findRepos = async (e) => {
         e.preventDefault()
+        setShowIllustration(false)
         if (inputData.length) {
             const response = await (await fetch('https://api.github.com/users/' + inputData + '/repos')).json()
-            setShowIllustration(false)
             setRepositoryData(response)
+        } else {
+            setRepositoryData({ message: 'Input field cannot be empty' })
         }
     }
 
@@ -44,22 +47,7 @@ export default function App() {
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {
                                                     repositoryData.map(repo => (
-                                                        <div key={repo.id} className="p-3 border-2 rounded-lg bg-white space-y-2 shadow-md">
-                                                            <div className="space-y-1">
-                                                                <a className="text-blue-500 font-semibold" href={repo.html_url} rel="noreferrer" target="_blank" >{repo.name}</a>
-                                                                <div className="h-16 overflow-auto text-gray-500 font-medium">
-                                                                    {
-                                                                        repo.description ? (
-                                                                            <p>{repo.description}</p>
-                                                                        ) : <p>This repo doesnt containt a description</p>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex justify-between text-gray-500 font-light">
-                                                                <p>Language: {repo.language ? repo.language : 'Others'}</p>
-                                                                <p>{repo.default_branch}</p>
-                                                            </div>
-                                                        </div>
+                                                        <RepositoryCard key={repo.id} repo={repo} />
                                                     ))
                                                 }
                                             </div>
