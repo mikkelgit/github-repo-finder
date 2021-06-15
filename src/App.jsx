@@ -16,8 +16,8 @@ export default function App() {
     }
 
     return (
-        <div className="bg-gray-100 h-screen p-3">
-            <div className="mx-auto max-w-screen-lg pt-6 lg:pt-12 space-y-3">
+        <div className="bg-gray-100 min-h-screen p-3">
+            <div className="mx-auto max-w-screen-lg pt-6 space-y-5">
                 <p className="text-lg text-center md:text-2xl font-bold">Find GitHub Repository by Username</p>
                 <form onSubmit={(e) => findRepos(e)} >
                     <div className="bg-white flex rounded-lg px-4 py-2 max-w-screen-sm mx-auto" >
@@ -35,11 +35,35 @@ export default function App() {
                             <img className="block md:max-w-screen-sm opacity-50 mx-auto" src={illustration} alt="" />
                         </div>
                     ) : (
-                        <div className="pt-16">
+                        <div className="py-2">
                             {
                                 repositoryData.message ? <p className="text-center text-lg font-bold">{repositoryData.message}</p> : (
                                     repositoryData.length ? (
-                                        <p>{JSON.stringify(repositoryData)}</p>
+                                        <div className="space-y-3">
+                                            <p className="font-bold text-gray-500 text-center md:text-right">{repositoryData.length} Repository Found</p>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                {
+                                                    repositoryData.map(repo => (
+                                                        <div key={repo.id} className="p-3 border-2 rounded-lg bg-white space-y-2 shadow-md">
+                                                            <div className="space-y-1">
+                                                                <a className="text-blue-500 font-semibold" href={repo.html_url} rel="noreferrer" target="_blank" >{repo.name}</a>
+                                                                <div className="h-16 overflow-auto text-gray-500 font-medium">
+                                                                    {
+                                                                        repo.description ? (
+                                                                            <p>{repo.description}</p>
+                                                                        ) : <p>This repo doesnt containt a description</p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex justify-between text-gray-500 font-light">
+                                                                <p>Language: {repo.language ? repo.language : 'Others'}</p>
+                                                                <p>{repo.default_branch}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </div>
                                     ) : <p className="text-center text-lg font-bold ">This user doesnt have any public repository :(</p>
                                 )
                             }
